@@ -1,0 +1,5 @@
+Host dmz.internal.com
+  HostName 127.0.0.1
+  Port 3333
+  User lsh@internal.com
+  IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/ext-dmz-bastion/ssh/lsh/lsh_bastion_key
