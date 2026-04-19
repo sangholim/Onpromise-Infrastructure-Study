@@ -1,6 +1,6 @@
 # EXT-FW1
 ## 네트워크
-- NAT (10.10.1.2)\
+- NAT (10.10.1.3)\
   RED
 - FW HOST-ONLY (10.10.10.2)\
   GREEN

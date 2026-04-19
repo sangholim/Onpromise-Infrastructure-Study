@@ -17,6 +17,8 @@
 sudo hostnamectl set-hostname ext-dmz-bastion
 ```
 
+## ssh 설정 참고
+- [ssh 설정가이드](./ssh/README.md)
 
 
   
