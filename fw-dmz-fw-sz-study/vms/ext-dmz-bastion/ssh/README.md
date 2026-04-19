@@ -109,7 +109,7 @@ vi sshConfig
 Host dmz.internal.com
   HostName 127.0.0.1
   Port 3333
-  User lsh@internal.com
+  User lsh
   # ex: IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/ext-dmz-bastion/ssh/lsh/lsh_bastion_key
   IdentityFile ${lsh 개인키 경로}
 
