@@ -11,7 +11,8 @@ x`# Onpromise-Infrastructure-Study
   - UTM: NAT , host only
   - Virtual BOX: ?
 - 방화벽 application: IPFire
-- OS : rhel9 CE
+- OS : rhel10 CE
+- DMZ-LB: IPVS
 - DMZ/SZ Web-Server: Nginx
 ## VM 네트워크 정보
 - NAT DHCP
