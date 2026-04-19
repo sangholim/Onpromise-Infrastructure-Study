@@ -89,6 +89,14 @@ PasswordAuthentication no
 PubkeyAuthentication yes
 
 sudo systemctl restart sshd
+
+# 4. hosts 등록 
+## 내부망에서는 일반적으로 호스트를 쓰지 않는데, 가상 host 를 쓰는 경우 (authorized_keys)
+## ssh 원격 접속시 prompt 에서 해당 dns 를 찾는 이슈가 있어서, alias domain 설정 필요
+vi /etc/hosts
+## 아래 라인 추가
+127.0.0.1   internal.com
+
 ```
 
 ---
@@ -101,7 +109,7 @@ vi sshConfig
 Host dmz.internal.com
   HostName 127.0.0.1
   Port 3333
-  User lsh@internal.com
+  User lsh
   # ex: IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/ext-dmz-bastion/ssh/lsh/lsh_bastion_key
   IdentityFile ${lsh 개인키 경로}
 

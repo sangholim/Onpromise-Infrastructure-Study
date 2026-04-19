@@ -1,5 +1,12 @@
 Host dmz.internal.com
   HostName 127.0.0.1
   Port 3333
-  User lsh@internal.com
+  User lsh
   IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/ext-dmz-bastion/ssh/lsh/lsh_bastion_key
+
+Host dmz.lb.internal.com
+  HostName 10.10.20.200
+  Port 22
+  User lsh
+  ProxyJump dmz.internal.com
+  IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/ext-dmz-lb/ssh/lsh/lsh_lb_key
