@@ -9,9 +9,9 @@
     ![SSH_FORWADING](ext_fw1_dmz_bastion_ssh.png)
 
   - 웹 (외부 - NAT)
-    ![관리자 웹](web.png)
-  - dmz outbound (dmz - 외부)
-    ![관리자 웹](dmz_external.png)
+    ![관리자 웹](fw_web.png)
+  - dmz outbound ( 외부)
+    ![관리자 웹](external.png)
   - 목록
     ![방화벽 목록](firewall_rules.png)
   - 재기동
