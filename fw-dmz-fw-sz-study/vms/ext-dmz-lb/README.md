@@ -9,6 +9,14 @@
 - HOST-ONLY (10.10.10.200) \
   gateway 10.10.10.2
 
+### VIP 구현
+- ipvs nat + keepalvied
+- ipvs nat 제약 사항
+  - 세션 owner는 LB
+  - 동일한 인터페이스 대역들은 (ext-dmz) LB 에 종속된다 \
+    ext-dmz 응답은 반드시 LB를 경유해야 정상 (게이트웨이 IP 를 dmz-lb ip 로 할당)
+  
+
 ``` {shell} \
   # ipv4 할당 및 gateway 설정 (dmz)
   nmcli connection modify enp0s8 \

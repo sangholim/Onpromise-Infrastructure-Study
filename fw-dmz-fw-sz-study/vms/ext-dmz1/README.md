@@ -1,7 +1,7 @@
 # EXT-DMZ
 ## 네트워크
 - HOST-ONLY (10.10.20.2) \
-  gateway 10.10.20.200 (LB 로 이동)
+  gateway 10.10.20.200 (LB 로 이동, dmz-lb 의 ipvs nat 의 ip 로 지정)
 ``` {shell} \
   # ipv4 할당 및 gateway 설정
   nmcli connection modify enp0s8 ipv4.addresses 10.10.20.2/24
