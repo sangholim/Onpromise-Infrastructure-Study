@@ -2,7 +2,11 @@
 
 # 구성도
 ![DMZ 서버](./images/Onpromise-Infrastructure.png "DMZ Server VM")
-
+# 계기
+- 방화벽 장비를 역할 및 동작을 확인하고픔
+- L7 라우팅이 아닌 L3 라우팅 확인하고픔 (외부 <-> 외부)
+- L3 switch , VIP 확인하고픔
+- dmz 망, 서버존 망을 구축하여 외부 접근 제어 구현
 # 구현 모듈
 - 학습 노트북이 Apple Silicon CPU 를 쓰므로 많이 제한적임
 - VM 구현 application: 
