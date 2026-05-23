@@ -1,5 +1,4 @@
-x`# Onpromise-Infrastructure-Study
-온프로미스 인프라 구축 학습
+# oracle vm , multiple subnet, ipvs 를 이용한 망연계
 
 # 구성도
 ![DMZ 서버](./images/Onpromise-Infrastructure.png "DMZ Server VM")
