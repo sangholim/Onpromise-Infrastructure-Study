@@ -45,24 +45,25 @@ VIP 및 Load Balancer 배치.
 - VIP 기반 서비스 엔드포인트
 - Backend 트래픽 분산
 - NAT 기반 Return Path 동작
-  - 응답시 NAT 장비를 다시 지나야한다.
-    ```text
-    # 예제1
-    Client:     1.1.1.1
-    VIP:        10.10.20.221
-    Backend:    10.10.20.2
-    IPVS LB:    10.10.20.251
-    # 요청 흐름
-    DST = 10.10.20.221
-    # IPVS 가 NAT 수행 (DNAT)
-    DST 변경:
-    10.10.20.221 → 10.10.20.2     
-    # Backend 응답 (SNAT)
-    VIP 통신하고 있기 때문에, 출발지 10.10.20.221 이 되어야한다.
-    SRC = 10.10.20.2 -> 10.10.20.221 로 바꿈
-    # Client 는 backend 존재를 모름, VIP 만 봄 
-    ```
+  ```text
+  # 예제1
+  Client:     1.1.1.1
+  VIP:        10.10.10.221
+  DMZ LB(IPVS):    10.10.20.200
+  Backend:    10.10.20.2
+  # 요청 흐름
+  1.1.1.1 -> 10.10.10.221 (ip 변환: 10.10.20.200) -> 10.10.20.2
+  # Backend 수신 패킷 정보
+  Backend 수신 packet:
+  SRC=10.10.20.200
+  DST=10.10.20.2 
+  # Backend 수신 packet 이 응답시 
+  10.10.20.2 -> 10.10.20.200 -> 1.1.1.1
+  ```
 - Session 흐름 분석
+
+### 참고
+- [라우트 컨셉](./contents/ROUTE_CONCEPT.md)
 - [dmz-lb 구축](./vms/ext-dmz-lb/README.md)
 
 ### Keepalived 기반 VIP 이중화
@@ -82,7 +83,7 @@ VIP 및 Load Balancer 배치.
 - Backend 직접 외부 노출 차단
 - NAT 기반 내부망 보호
 - Stateful Firewall 기반 세션 관리 적용
-### IPFIRE 참고
+### 참고
 - [dmz-fw 구축](./vms/ext-fw1/README.md)
 
 # 네트워크 문제 분석 및 트러블슈팅
