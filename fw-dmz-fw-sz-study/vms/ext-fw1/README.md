@@ -14,3 +14,9 @@
   - 2222 -> fw1-host:22
 - dmz bastion ssh
   - 3333 -> dmz-bastion-host:22
+## IP FIRE 정책
+| Zone   | 역할      |
+| ------ | ------- |
+| RED    | 외부 네트워크 |
+| ORANGE | DMZ     |
+| GREEN  | 내부망     |
