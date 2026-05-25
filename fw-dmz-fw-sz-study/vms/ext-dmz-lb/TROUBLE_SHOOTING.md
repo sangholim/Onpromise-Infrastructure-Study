@@ -13,12 +13,12 @@ DMZ-LB (VIP) 에서 BACKEND 로 요청시 정상 응답을 받지만 \
 ```shell
 # Client -> LB -> Backend -> LB -> Client 가야하는지 체크
 tcpdump -nn
-# NAT/state 세션이 정상 유지되는가
-conntrack -L
 # 커널 경로 확인
 ip route
 # L2 에서 직접 통신하고 있는지 확인
 arp -a
+# ipvsadm 으로 세션상태체크
+ipvsadm -Lc
 ```
 
 - 분석결과
