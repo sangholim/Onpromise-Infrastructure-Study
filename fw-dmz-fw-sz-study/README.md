@@ -87,5 +87,7 @@ VIP 및 Load Balancer 배치.
 - [dmz-fw 구축](./vms/ext-fw1/README.md)
 
 # 네트워크 문제 분석 및 트러블슈팅
+### 패킷 흐름도 분석
+- [패킷 흐름도](./contents/PACKET_FLOW.md)
 ### asymmetric routing 문제 분석 및 해결
 - [dmz-lb 연결 이슈 대응 구축](./vms/ext-dmz-lb/TROUBLE_SHOOTING.md)
