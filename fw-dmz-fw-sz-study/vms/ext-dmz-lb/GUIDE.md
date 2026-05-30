@@ -143,6 +143,8 @@ iptables -P FORWARD ACCEPT
 
 iptables -t nat -F
 
+# FW 로 향하는 패킷의 출발지 주소를 enp0s9 의 IP 로 할당하라.
+# 응답할때 10.10.20.x 주소는 fw 에서는 알지 못함
 iptables -t nat -A POSTROUTING \
   -o enp0s9 \
   -j MASQUERADE
@@ -171,7 +173,13 @@ systemctl enable ipvsadm --now
 
 # =========================================================
 # Keepalived MASTER 설정
+# vrrp_instance VI_1
 # FRONT NIC = enp0s9
+# FW -> DMZ-LB
+# 
+# vrrp_instance VI_2
+# PROXY NIC = enp0s8
+# DMZ -> DMZ-LB
 # =========================================================
 
 cat <<EOF > /etc/keepalived/keepalived.conf
@@ -195,6 +203,28 @@ vrrp_instance VI_1 {
 
     virtual_ipaddress {
         10.10.10.221/24
+    }
+}
+
+vrrp_instance VI_2 {
+
+    state MASTER
+
+    interface enp0s8
+
+    virtual_router_id 52
+
+    priority 150
+
+    advert_int 1
+
+    authentication {
+        auth_type PASS
+        auth_pass 1234
+    }
+
+    virtual_ipaddress {
+        10.10.20.221/24
     }
 }
 
