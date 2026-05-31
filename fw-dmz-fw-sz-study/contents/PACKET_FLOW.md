@@ -59,19 +59,17 @@ dropped privs to tcpdump
 tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
 listening on any, link-type LINUX_SLL2 (Linux cooked v2), snapshot length 262144 bytes
 
-## fw -> dmz-lb
+## fw -> dmz-lb (VIP)
 14:21:29.563465 enp0s9 In  IP 10.10.1.1.49313 > 10.10.10.221.80: Flags [S], seq 92864001, win 65535, options [mss 1460], length 0
 
 ## fw -> dmz-lb (DNAT) -> dmz 
-## dmz 로 보낼수 있지만, 패킷 경로가 나타나지 않아서 유지보수가 힘들다.  
 14:21:29.563481 enp0s8 Out IP 10.10.1.1.49313 > 10.10.20.2.80: Flags [S], seq 92864001, win 65535, options [mss 1460], length 0
 
 ## dmz -> fw 로 향하는 패킷이 NIC enp0s8 에 들어옴
 14:21:29.564163 enp0s8 In  IP 10.10.20.2.80 > 10.10.1.1.49313: Flags [S.], seq 4256902853, ack 92864002, win 64240, options [mss 1460], length 0
 
 ## dmz-lb (VIP) -> fw 로 향하는 패킷이 NIC enp0s9 로 나감
-14:21:29.564177 enp0s9 Out IP 10.10.10.221.80 > 10.10.1.1.49313: Flags [S.], seq 4256902853, ack 92864002, win 64240, options [mss 1460], length 0
-```
+14:21:29.564177 enp0s9 Out IP 10.10.10.221.80 > 10.10.1.1.49313: Flags [S.], seq 4256902853, ack 92864002, win 64240, options [mss 1460], length 0```
 ### dmz 에서 tcpdump
 ```text
 #dmz cli
