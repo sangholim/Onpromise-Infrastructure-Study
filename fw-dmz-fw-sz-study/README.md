@@ -2,8 +2,9 @@
 
 # 구성도
 ![DMZ 서버](./images/Onpromise-Infrastructure.png "DMZ Server VM")
-
-# 프로젝트 계기
+# 계기
+- 웹 서비스 개발 및 CI/CD 구축 경험을 바탕으로, 서비스가 실제 운영되는 네트워크 및 인프라 계층에 대한 이해를 확장하고자 본 프로젝트를 진행하였습니다. 방화벽, DMZ, Load Balancer, Backend 환경을 직접 설계·구축하고, 패킷 분석과 트러블슈팅을 통해 네트워크 동작 원리를 학습하는 것을 목표
+# 프로젝트 목표
 - 방화벽 장비의 역할 및 실제 동작 방식 이해
 - L7 기반 단순 reverse proxy 가 아닌 L3/L4 기반 네트워크 흐름 검증
   - [L3, L7 영역 비교](./contents/L3_L7_DIFF.md)
