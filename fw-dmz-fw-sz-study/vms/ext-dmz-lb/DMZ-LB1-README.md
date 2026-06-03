@@ -32,7 +32,7 @@
 | DMZ NIC     | `10.10.20.201/24`, `never-default=yes`  |
 | FW NIC      | `10.10.10.201/24`, `gateway=10.10.10.2` |
 | Route 확인    | `ip route`                              |
-| Hostname 설정 | `hostnamectl set-hostname ext-dmz-lb-1` |
+| Hostname 설정 | `hostnamectl set-hostname ext-dmz-lb1` |
 
 ### 설치 패키지
 | 패키지               | 역할               |
