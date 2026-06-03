@@ -65,7 +65,8 @@ VIP 및 Load Balancer 배치.
 
 ### 참고
 - [라우트 컨셉](./contents/ROUTE_CONCEPT.md)
-- [dmz-lb 구축](./vms/ext-dmz-lb/README.md)
+- [dmz-lb 구축](./vms/ext-dmz-lb/DMZ-LB-README.md)
+- [dmz-lb1 구축](./vms/ext-dmz-lb/DMZ-LB1-README.md)
 
 ### Keepalived 기반 VIP 이중화
 구성 방식

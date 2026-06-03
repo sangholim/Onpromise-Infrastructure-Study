@@ -1,13 +1,13 @@
-# EXT-DMZ-LB
+# EXT-DMZ-LB1
 ## 네트워크
 ### DMZ
 - ip 대역 (10.10.20.200 ~ 10.10.20.220)
-- HOST-ONLY (10.10.20.200) \
+- HOST-ONLY (10.10.20.201) \
 - VIP (10.10.20.221)
 ### FW
 - ip 대역 (10.10.10.200 ~ 10.10.10.220)
 - VIP (10.10.10.221)
-- HOST-ONLY (10.10.10.200) \
+- HOST-ONLY (10.10.10.201) \
   gateway 10.10.10.2
 
 ### VIP 구현
@@ -21,14 +21,14 @@
 ``` {shell} \
   # ipv4 할당 및 gateway 설정 (dmz)
   nmcli connection modify enp0s8 \
-    ipv4.addresses 10.10.20.200/24 \
+    ipv4.addresses 10.10.20.201/24 \
     ipv4.method manual \
     ipv4.never-default yes && \
   nmcli connection up enp0s8;
 
   # ipv4 할당 및 gateway 설정 (fw)
   nmcli connection modify enp0s9 \
-    ipv4.addresses 10.10.10.200/24 \
+    ipv4.addresses 10.10.10.201/24 \
     ipv4.gateway 10.10.10.2 \
     ipv4.method manual && \
   nmcli connection up enp0s9;
@@ -40,7 +40,7 @@
 ## 호스트 설정
 
 ```shell
-sudo hostnamectl set-hostname ext-dmz-lb
+sudo hostnamectl set-hostname ext-dmz-lb1
 ```
 -------
 
@@ -156,7 +156,6 @@ iptables -t nat -A POSTROUTING \
 # VIP = FRONT subnet
 # backend = BACK subnet
 # =========================================================
-
 ipvsadm -C
 
 ipvsadm -A -t 10.10.10.221:80 -s rr
@@ -170,10 +169,8 @@ ipvsadm -a -t 10.10.10.221:80 \
 ipvsadm-save > /etc/sysconfig/ipvsadm
 
 systemctl enable ipvsadm --now
-
-
 # =========================================================
-# Keepalived MASTER 설정
+# Keepalived BACKUP 설정
 # vrrp_instance VI_1
 # FRONT NIC = enp0s9
 # FW -> DMZ-LB
@@ -187,7 +184,7 @@ cat <<EOF > /etc/keepalived/keepalived.conf
 
 vrrp_instance VI_1 {
 
-    state MASTER
+    state BACKUP
 
     interface enp0s9
 
@@ -209,7 +206,7 @@ vrrp_instance VI_1 {
 
 vrrp_instance VI_2 {
 
-    state MASTER
+    state BACKUP
 
     interface enp0s8
 

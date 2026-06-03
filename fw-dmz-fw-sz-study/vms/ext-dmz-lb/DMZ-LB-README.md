@@ -9,7 +9,7 @@
 
 ### VIP / LB 구조 개요
 | 항목              | 내용                        |
-| --------------- | ------------------------- |
+| --------------- |---------------------------|
 | LB 방식           | IPVS NAT                  |
 | HA 구성           | Keepalived VRRP           |
 | 스케줄링            | Round Robin (rr)          |
@@ -17,7 +17,7 @@
 | Backend 위치      | BACK subnet (10.10.20.x)  |
 | NAT 특징          | 세션 owner 는 LB             |
 | 라우팅 특징          | Backend 응답은 반드시 LB 경유     |
-| Backend Gateway | DMZ-LB IP 로 설정 필요         |
+| Backend Gateway | DMZ-LB VIP 로 설정 필요        |
 | Failover        | Keepalived 기반 VIP 이전 가능   |
 
 ### 인터페이스 구성
