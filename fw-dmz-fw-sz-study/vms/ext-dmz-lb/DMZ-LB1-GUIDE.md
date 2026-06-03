@@ -40,7 +40,7 @@
 ## 호스트 설정
 
 ```shell
-sudo hostnamectl set-hostname ext-dmz-lb-1
+sudo hostnamectl set-hostname ext-dmz-lb1
 ```
 -------
 
