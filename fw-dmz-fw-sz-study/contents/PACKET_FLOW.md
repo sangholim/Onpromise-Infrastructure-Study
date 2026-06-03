@@ -70,6 +70,8 @@ listening on any, link-type LINUX_SLL2 (Linux cooked v2), snapshot length 262144
 
 ## dmz-lb (VIP) -> fw 로 향하는 패킷이 NIC enp0s9 로 나감
 14:21:29.564177 enp0s9 Out IP 10.10.10.221.80 > 10.10.1.1.49313: Flags [S.], seq 4256902853, ack 92864002, win 64240, options [mss 1460], length 0```
+```
+
 ### dmz 에서 tcpdump
 ```text
 #dmz cli
@@ -85,6 +87,48 @@ listening on any, link-type LINUX_SLL2 (Linux cooked v2), snapshot length 262144
 
 ## dmz -> fw 로  향하는 패킷이 enp0s8 로 나감
 14:45:24.980188 enp0s8 Out IP 10.10.20.2.80 > 10.10.1.1.49397: Flags [S.], seq 2327241607, ack 278656002, win 64240, options [mss 1460], length 0
+```
+
+### dmz-lb, dmz-lb1 keepalived 
+- dmz-lb (MASTER), dmz-lb1 (BACKUP)
+- dmz-lb 가 죽으면, dmz-lb1 은 MASTER 상태가 된다.
+- dmz-lb 가 다시 살아나면 BACKUP 상태가 된다.
+
+```shell
+# dmz-lb MASTER 상태 확인
+journalctl -u keepalived | grep "MASTER"
+6월 03 15:32:18 ext-dmz-lb Keepalived_vrrp[1075]: (VI_2) Entering MASTER STATE
+6월 03 15:32:18 ext-dmz-lb Keepalived_vrrp[1075]: (VI_1) Entering MASTER STATE
+
+# dmz-lb1 BACKUP 상태 확인
+root@ext-dmz-lb1:/home/lsh# journalctl -u keepalived -f
+6월 03 15:32:24 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_1) Entering BACKUP STATE (init)
+6월 03 15:32:24 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_2) Entering BACKUP STATE (init)
+
+# dmz-lb 죽고나서, dmz-lb1 상태 확인
+## 원래 MASTER가 VRRP heartbeat를 끊어서, BACKUP이 장애로 판단한 로그, MASTER 상태로 전환
+6월 03 16:12:08 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_2) Receive advertisement timeout
+6월 03 16:12:08 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_2) Entering MASTER STATE
+6월 03 16:12:08 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_2) setting VIPs.
+6월 03 16:12:08 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_2) Sending/queueing gratuitous ARPs on enp0s8 for 10.10.20.221
+6월 03 16:12:08 ext-dmz-lb1 Keepalived_vrrp[3012]: Sending gratuitous ARP on enp0s8 for 10.10.20.221
+6월 03 16:12:08 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_1) Receive advertisement timeout
+6월 03 16:12:08 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_1) Entering MASTER STATE
+6월 03 16:12:08 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_1) setting VIPs.
+6월 03 16:12:08 ext-dmz-lb1 Keepalived_vrrp[3012]: (VI_1) Sending/queueing gratuitous ARPs on enp0s9 for 10.10.10.221
+
+# dmz-lb 살리고나서, dmz-lb 상태 확인
+## 주소를 재등록하고, 백업 상태로 등록됨 
+6월 03 16:19:26 ext-dmz-lb Keepalived_vrrp[1179]: Assigned address fe80::a00:27ff:fe11:aef1 for interface enp0s8
+6월 03 16:19:26 ext-dmz-lb Keepalived_vrrp[1179]: Registering gratuitous ARP shared channel
+6월 03 16:19:26 ext-dmz-lb Keepalived_vrrp[1179]: (VI_1) removing VIPs.
+6월 03 16:19:26 ext-dmz-lb Keepalived_vrrp[1179]: (VI_2) removing VIPs.
+6월 03 16:19:26 ext-dmz-lb Keepalived_vrrp[1179]: (VI_1) Entering BACKUP STATE (init)
+6월 03 16:19:26 ext-dmz-lb Keepalived_vrrp[1179]: (VI_2) Entering BACKUP STATE (init)
+6월 03 16:19:26 ext-dmz-lb Keepalived_vrrp[1179]: VRRP sockpool: [ifindex(  3), family(IPv4), proto(112), fd(12,13) multicast, address(224.0.0.18)]
+6월 03 16:19:26 ext-dmz-lb Keepalived_vrrp[1179]: VRRP sockpool: [ifindex(  2), family(IPv4), proto(112), fd(14,15) multicast, address(224.0.0.18)]
+6월 03 16:19:26 ext-dmz-lb Keepalived[1029]: Startup complete
+6월 03 16:19:26 ext-dmz-lb systemd[1]: Started keepalived.service - LVS and VRRP High Availability Monitor.
 ```
 
 ### dmz-lb ipvs
