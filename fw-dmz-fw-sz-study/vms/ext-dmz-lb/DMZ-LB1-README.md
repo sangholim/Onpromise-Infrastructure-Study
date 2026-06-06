@@ -76,14 +76,16 @@
 | Forward 방식 | NAT (`-m`)      |
 
 ### Keepalived 설정
+- nopreempt 활성화시, Priority 높은 노드가 다시 MASTER 로 되지않음
 #### FW -> DMZ-LB
 | 항목        | 값               |
-| --------- | --------------- |
+| --------- |-----------------|
 | Instance  | VI_1            |
-| 상태        | MASTER          |
+| 상태        | BACKUP          |
 | Interface | enp0s9          |
 | VRID      | 51              |
-| Priority  | 150             |
+| Priority  | 140             |
+| nopreempt  |                 |
 | VIP       | 10.10.10.221/24 |
 | 인증        | PASS / 1234     |
 
@@ -91,10 +93,11 @@
 | 항목        | 값               |
 | --------- |-----------------|
 | Instance  | VI_12           |
-| 상태        | MASTER          |
+| 상태        | BACKUP          |
 | Interface | enp0s8          |
 | VRID      | 52              |
-| Priority  | 150             |
+| Priority  | 140             |
+| nopreempt  |                 |
 | VIP       | 10.10.20.221/24 |
 | 인증        | PASS / 1234     |
 
