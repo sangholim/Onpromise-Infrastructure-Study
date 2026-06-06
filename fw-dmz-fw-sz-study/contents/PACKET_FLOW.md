@@ -133,7 +133,6 @@ root@ext-dmz-lb1:/home/lsh# journalctl -u keepalived -f
 ### dmz-lb, dmz-lb1 keepalived  (2)
 - dmz-lb (MASTER, priority: 150), dmz-lb1 (BACKUP, priority: 140, nopreempt)
 - dmz-lb, dmz-lb1 VRRP 수신하지 못하는 상태로 만든다.
-- 서로
 ```shell
 # VRRP 패킷 드랍 정책을 추가하여, 모두 MATER 올라가도록 버그 발생 (dmz-lb, dmz-lb1) 
 iptables -A OUTPUT -p 112 -j DROP 
