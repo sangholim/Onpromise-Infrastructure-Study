@@ -190,9 +190,11 @@ vrrp_instance VI_1 {
 
     virtual_router_id 51
 
-    priority 150
+    priority 140
 
     advert_int 1
+
+    nopreempt
 
     authentication {
         auth_type PASS
@@ -212,9 +214,11 @@ vrrp_instance VI_2 {
 
     virtual_router_id 52
 
-    priority 150
+    priority 140
 
     advert_int 1
+
+    nopreempt
 
     authentication {
         auth_type PASS
