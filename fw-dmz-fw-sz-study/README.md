@@ -63,11 +63,6 @@ VIP 및 Load Balancer 배치.
   ```
 - Session 흐름 분석
 
-### 참고
-- [라우트 컨셉](./contents/ROUTE_CONCEPT.md)
-- [dmz-lb 구축](./vms/ext-dmz-lb/DMZ-LB-README.md)
-- [dmz-lb1 구축](./vms/ext-dmz-lb/DMZ-LB1-README.md)
-
 ### Keepalived 기반 VIP 이중화
 구성 방식
 - Active / Backup 구조
@@ -77,6 +72,12 @@ VIP 및 Load Balancer 배치.
 - VIP failover 동작
 - Gratuitous ARP 기반 VIP 이동
 - 장애 발생 시 세션 영향 확인
+
+### 참고
+- [keepalived 이해](./contents/KEEPALIVED.md)
+- [라우트 컨셉](./contents/ROUTE_CONCEPT.md)
+- [dmz-lb 구축](./vms/ext-dmz-lb/DMZ-LB-README.md)
+- [dmz-lb1 구축](./vms/ext-dmz-lb/DMZ-LB1-README.md)
 
 # 방화벽 및 네트워크 보안 구성
 ### 보안 정책 설계

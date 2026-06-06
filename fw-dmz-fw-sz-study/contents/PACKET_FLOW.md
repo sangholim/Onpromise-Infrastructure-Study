@@ -89,7 +89,7 @@ listening on any, link-type LINUX_SLL2 (Linux cooked v2), snapshot length 262144
 14:45:24.980188 enp0s8 Out IP 10.10.20.2.80 > 10.10.1.1.49397: Flags [S.], seq 2327241607, ack 278656002, win 64240, options [mss 1460], length 0
 ```
 
-### dmz-lb, dmz-lb1 keepalived 
+### dmz-lb, dmz-lb1 keepalived  (1)
 - dmz-lb (MASTER), dmz-lb1 (BACKUP)
 - dmz-lb 가 죽으면, dmz-lb1 은 MASTER 상태가 된다.
 - dmz-lb 가 다시 살아나면 BACKUP 상태가 된다.
@@ -129,6 +129,46 @@ root@ext-dmz-lb1:/home/lsh# journalctl -u keepalived -f
 6월 03 16:19:26 ext-dmz-lb Keepalived_vrrp[1179]: VRRP sockpool: [ifindex(  2), family(IPv4), proto(112), fd(14,15) multicast, address(224.0.0.18)]
 6월 03 16:19:26 ext-dmz-lb Keepalived[1029]: Startup complete
 6월 03 16:19:26 ext-dmz-lb systemd[1]: Started keepalived.service - LVS and VRRP High Availability Monitor.
+```
+### dmz-lb, dmz-lb1 keepalived  (2)
+- dmz-lb (MASTER, priority: 150), dmz-lb1 (BACKUP, priority: 140, nopreempt)
+- dmz-lb, dmz-lb1 VRRP 수신하지 못하는 상태로 만든다.
+- 서로
+```shell
+# VRRP 패킷 드랍 정책을 추가하여, 모두 MATER 올라가도록 버그 발생 (dmz-lb, dmz-lb1) 
+iptables -A OUTPUT -p 112 -j DROP 
+iptables -A INPUT -p 112 -j DROP
+# 로그 확인하여 모두 MASTER 상태인지 확인 (dmz-lb, dmz-lb1)
+## dmz-lb
+root@ext-dmz-lb:/home/lsh# journalctl -u keepalived | grep "Entering MASTER"
+ 6월 06 15:21:12 ext-dmz-lb Keepalived_vrrp[1072]: (VI_2) Entering MASTER STATE
+ 6월 06 15:21:12 ext-dmz-lb Keepalived_vrrp[1072]: (VI_1) Entering MASTER STATE
+ 6월 06 15:37:59 ext-dmz-lb Keepalived_vrrp[3331]: (VI_1) Entering MASTER STATE
+ 6월 06 15:38:17 ext-dmz-lb Keepalived_vrrp[3331]: (VI_2) Entering MASTER STATE
+ 
+ ## dmz-lb1
+ root@ext-dmz-lb1:/home/lsh# journalctl -u keepalived | grep "Entering MASTER"
+ 6월 06 15:37:55 ext-dmz-lb1 Keepalived_vrrp[1171]: (VI_2) Entering MASTER STATE
+ 6월 06 15:37:55 ext-dmz-lb1 Keepalived_vrrp[1171]: (VI_1) Entering MASTER STATE
+ 6월 06 15:48:56 ext-dmz-lb1 Keepalived_vrrp[3550]: (VI_2) Entering MASTER STATE
+ 6월 06 15:48:56 ext-dmz-lb1 Keepalived_vrrp[3550]: (VI_1) Entering MASTER STATE
+
+# VRRP 패킷 드랍 정책을 제거하여, BACKUP, MASTER 상태 동기화 확인  (dmz-lb, dmz-lb1)
+iptables -D OUTPUT -p 112 -j DROP
+iptables -D INPUT -p 112 -j DROP
+
+# 로그 확인하여 MASTER, BACKUP 상태인지 확인 (dmz-lb, dmz-lb1)
+## dmz-lb 는 상태 유지 (dmz-lb1 = BACKUP ,nopreempt, priority 가 더 낮음)
+root@ext-dmz-lb:/home/lsh# journalctl -u keepalived | grep "Entering "
+ 6월 06 15:21:09 ext-dmz-lb Keepalived_vrrp[1072]: (VI_1) Entering BACKUP STATE (init)
+ 6월 06 15:21:09 ext-dmz-lb Keepalived_vrrp[1072]: (VI_2) Entering BACKUP STATE (init)
+ 6월 06 15:21:12 ext-dmz-lb Keepalived_vrrp[1072]: (VI_2) Entering MASTER STATE
+ 6월 06 15:21:12 ext-dmz-lb Keepalived_vrrp[1072]: (VI_1) Entering MASTER STATE
+ 6월 06 15:37:55 ext-dmz-lb Keepalived_vrrp[3331]: (VI_1) Entering BACKUP STATE (init)
+ 6월 06 15:37:55 ext-dmz-lb Keepalived_vrrp[3331]: (VI_2) Entering BACKUP STATE (init)
+ 6월 06 15:37:59 ext-dmz-lb Keepalived_vrrp[3331]: (VI_1) Entering MASTER STATE
+ 6월 06 15:38:17 ext-dmz-lb Keepalived_vrrp[3331]: (VI_2) Entering MASTER STATE
+
 ```
 
 ### dmz-lb ipvs
