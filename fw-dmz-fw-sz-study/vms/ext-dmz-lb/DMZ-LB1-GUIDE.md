@@ -150,6 +150,12 @@ iptables -t nat -A POSTROUTING \
   -o enp0s9 \
   -j MASQUERADE
 
+# iptables 영구저장
+iptables-save > /etc/sysconfig/iptables
+
+# iptables 부팅시 자동 복원
+systemctl status iptables
+systemctl enable iptables
 
 # =========================================================
 # IPVS 설정
