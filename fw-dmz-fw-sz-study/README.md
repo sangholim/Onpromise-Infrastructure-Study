@@ -90,6 +90,8 @@ VIP 및 Load Balancer 배치.
 - [dmz-fw 구축](./vms/ext-fw1/README.md)
 
 # 네트워크 문제 분석 및 트러블슈팅
+### 라우팅, 이더넷 참고
+- [라우팅, 이더넷 비교](./contents/ROUTING_ETH.md)
 ### 패킷 흐름도 분석
 - [패킷 흐름도](./contents/PACKET_FLOW.md)
 ### asymmetric routing 문제 분석 및 해결
