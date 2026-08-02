@@ -160,14 +160,14 @@ systemctl enable iptables
 # =========================================================
 # IPVS 설정
 # VIP = FRONT subnet
-# backend = BACK subnet
+# DMZ = DMZ subnet
 # =========================================================
 ipvsadm -C
 
 ipvsadm -A -t 10.10.10.221:80 -s rr
 
 ipvsadm -a -t 10.10.10.221:80 \
-  -r 10.10.20.11:80 \
+  -r 10.10.20.231:80 \
   -m
 
 

@@ -1,10 +1,10 @@
 # EXT-DMZ
 ## 네트워크
-- HOST-ONLY (10.10.20.11) \
+- HOST-ONLY (10.10.20.231) \
   gateway 10.10.20.221 (dmz -> dmz-lb)
 ``` {shell} \
   # ipv4 할당 및 gateway 설정
-  nmcli connection modify enp0s8 ipv4.addresses 10.10.20.11/24
+  nmcli connection modify enp0s8 ipv4.addresses 10.10.20.231/24
   nmcli connection modify enp0s8 ipv4.gateway 10.10.20.221
   nmcli connection modify enp0s8 ipv4.method manual
   nmcli connection up enp0s8
