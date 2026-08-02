@@ -1,22 +1,22 @@
 # EXT-DMZ
 ## 네트워크
-- HOST-ONLY (10.10.20.231) \
-  gateway 10.10.20.221 (dmz -> dmz-lb)
+- HOST-ONLY (10.10.30.2) \
+  gateway 10.10.30.1 
 ``` {shell} \
   # ipv4 할당 및 gateway 설정
-  nmcli connection modify enp0s8 ipv4.addresses 10.10.20.231/24
-  nmcli connection modify enp0s8 ipv4.gateway 10.10.20.221
+  nmcli connection modify enp0s8 ipv4.addresses 10.10.30.2/24
+  nmcli connection modify enp0s8 ipv4.gateway 10.10.30.1
   nmcli connection modify enp0s8 ipv4.method manual
   nmcli connection up enp0s8
   # ip route
-  default via 10.10.20.221
+  default via 10.10.30.2
 
 ```
 
 ## 호스트 설정
 
 ```shell
-sudo hostnamectl set-hostname ext-dmz1
+sudo hostnamectl set-hostname be-arm
 ```
 -------
 
@@ -39,6 +39,9 @@ systemctl status nginx
 firewall-cmd --permanent --add-service=http
 firewall-cmd --permanent --add-service=https
 firewall-cmd --reload
+
+# dmz route table 추가
+ip route add 10.10.20.0/24 via 10.10.30.1
 
 # 동작확인
 curl http://localhost
