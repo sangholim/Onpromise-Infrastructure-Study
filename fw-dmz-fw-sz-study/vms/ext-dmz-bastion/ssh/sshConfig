@@ -17,3 +17,10 @@ Host dmz.lb1.internal.com
   User lsh
   ProxyJump dmz.internal.com
   IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/ext-dmz-lb/ssh/lsh/lsh_lb_key
+
+Host fw2.fw2
+  HostName 10.10.20.11
+  Port 22
+  User lsh
+  ProxyJump dmz.internal.com
+  IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/fw2/ssh/lsh/lsh_fw2_key
