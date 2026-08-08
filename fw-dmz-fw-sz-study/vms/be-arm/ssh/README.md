@@ -1,8 +1,8 @@
-# FW2 원격 접근 방법
+# BE_ARM 원격 접근 방법
 
 ## SSH 원격 접근 필요성
-이 구조에서 FW2 는 DMZ-BE 간 접근제어를 하는 역할을 한다.
-DMZ Bastion host 를 경유한다.
+이 구조에서 BE-ARM 는 vm, process 모니터링 수집을 담당하는 서버이다.
+DMZ Bastion , FW2  를 경유한다.
 
 ---
 
@@ -18,16 +18,17 @@ Firewall
 DMZ Bastion Host
 ↓ (ProxyJump / SSH Tunnel)
 FW2
-
+↓ (ProxyJump / SSH Tunnel)
+BE-ARM
 ```
 
 ---
 ```bash
 # 1. Key 생성 (클라이언트)
-ssh-keygen -t ed25519 -C "lsh@fw2.fw2" -f ./lsh_fw2_key
+ssh-keygen -t ed25519 -C "lsh@be-arm.internal.com" -f ./lsh_be_arm_key
 # 1.1 파일 생성후 권한 600
-chmod 600 ./lsh_fw2_key
-# 2. be-arm vmt에 Public Key 등록
+chmod 600 ./lsh_be_arm_key
+# 2. be-arm vm에 Public Key 등록
 sudo useradd -m -s /bin/bash lsh
 
 # 비밀번호 미설정
@@ -60,7 +61,7 @@ sudo systemctl restart sshd
 ## ssh 원격 접속시 prompt 에서 해당 dns 를 찾는 이슈가 있어서, alias domain 설정 필요
 vi /etc/hosts
 ## 아래 라인 추가
-127.0.0.1   internal.com
+127.0.0.1   be-arm.internal.com
 
 ```
 
@@ -71,14 +72,14 @@ vi /etc/hosts
 vi sshConfig
 
 # 파일안에 아래의 정보 입력
-Host dmz.fw2.internal.com
-# HostName 10.10.20.11 (dmz-be 간 방화벽)
-  HostName 10.10.20.11
+Host be-arm.internal.com
+  HostName 10.10.30.11
   Port 22
   User lsh
-  # ex: IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/fw2/ssh/lsh/lsh_fw2_key
+  ProxyJump fw2.fw2
+  # ex: IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/be-arm/ssh/lsh/lsh_be_arm_key
   IdentityFile ${lsh 개인키 경로}
 
-ssh -F ${sshConfig 경로} lsh@dmz.fw2.internal.com
+ssh -F ${sshConfig 경로} lsh@be-arm.internal.com
 
 ```
