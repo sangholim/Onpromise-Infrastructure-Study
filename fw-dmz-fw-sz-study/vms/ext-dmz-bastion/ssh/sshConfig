@@ -24,3 +24,10 @@ Host fw2.fw2
   User lsh
   ProxyJump dmz.internal.com
   IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/fw2/ssh/lsh/lsh_fw2_key
+
+Host be-arm.internal.com
+  HostName 10.10.30.11
+  Port 22
+  User lsh
+  ProxyJump fw2.fw2
+  IdentityFile /Users/mac/Project/Onpromise-Infrastructure-Study/fw-dmz-fw-sz-study/vms/be-arm/ssh/lsh/lsh_be_arm_key
