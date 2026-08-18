@@ -44,3 +44,15 @@ firewall-cmd --reload
 curl http://localhost
 
 ```
+## http 포트 개방
+
+```bash
+getenforce
+# output 이 enforcing 이면 아래 수행
+getsebool httpd_can_network_connect
+# httpd_can_network_connect --> off 이면 아래 수행
+sudo setsebool -P httpd_can_network_connect 1
+# 네트워크 연결 다시 확인
+getsebool httpd_can_network_connect
+# httpd_can_network_connect --> on 이면 nginx 재기동
+```
