@@ -20,15 +20,23 @@ sudo hostnamectl set-hostname be-arm
 ```
 -------
 
-## 목표
-- dmz-lb 에서 트래픽을 전달받는 역할을한다.
-- nginx 로 프록시를 수행한다.
+## 내부망에서는 방화벽 비활성화
 
+```bash
+sudo systemctl disable --now firewalld
+```
+
+
+## 목표
+- vm 들을 모니터링하는 툴 설치
 
 ## Prometheus 설치
-- [참고](../software/prometheus/INSTALL.md)
-
 Prometheus 서버에 Prometheus를 설치합니다.
+- [참고](../software/prometheus/INSTALL.md)
+- Metrics 수집 및 저장 port: 9091
+- 
+
+
 
 ### 1 사용자 생성
 
@@ -43,3 +51,177 @@ sudo mkdir -p /etc/prometheus
 sudo mkdir -p /var/lib/prometheus
 ```
 
+
+### 2.3 Prometheus 설치
+
+Prometheus 바이너리를 다운로드하여 설치합니다.
+
+```bash
+wget https://github.com/prometheus/prometheus/releases/download/v3.13.1/prometheus-3.13.1.linux-arm64.tar.gz
+tar xvf prometheus-3.13.1.linux-arm64.tar.gz
+cd prometheus-3.13.1.linux-arm64
+```
+
+바이너리 복사:
+
+```bash
+sudo cp prometheus /usr/local/bin/
+sudo cp promtool /usr/local/bin/
+```
+
+설정 파일 복사:
+
+```bash
+sudo cp prometheus.yml /etc/prometheus/
+```
+
+권한 설정:
+
+```bash
+sudo chown -R prometheus:prometheus /etc/prometheus
+sudo chown -R prometheus:prometheus /var/lib/prometheus
+```
+
+
+## 3. Prometheus 설정
+
+설정 파일:
+
+```text
+/etc/prometheus/prometheus.yml
+```
+
+기본 설정:
+
+```yaml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets:
+          - "localhost:9091"
+```
+
+## 4. Prometheus 서비스 등록
+
+systemd 서비스 파일:
+
+```text
+/etc/systemd/system/prometheus.service
+```
+
+```ini
+[Unit]
+Description=Prometheus
+After=network.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+
+ExecStart=/usr/local/bin/prometheus \
+  --config.file=/etc/prometheus/prometheus.yml \
+  --storage.tsdb.path=/var/lib/prometheus \
+  --web.listen-address=0.0.0.0:9091
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+서비스 등록 및 실행:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now prometheus
+```
+
+상태 확인:
+
+```bash
+sudo systemctl status prometheus
+```
+
+포트 확인:
+
+```bash
+ss -lntp | grep 9091
+```
+
+Prometheus Web UI:
+
+```text
+http://<PROMETHEUS_IP>:9091
+```
+## 5. Grafana 설치
+
+Prometheus Metrics를 Dashboard로 시각화하기 위해 Grafana를 설치합니다.
+
+```text
+Prometheus
+     │
+     │ PromQL
+     ▼
+Grafana
+```
+
+Grafana 설치
+
+```bash
+sudo tee /etc/yum.repos.d/grafana.repo > /dev/null <<'EOF'
+[grafana]
+name=grafana
+baseurl=https://rpm.grafana.com
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://rpm.grafana.com/gpg.key
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+EOF
+```
+
+```bash
+sudo dnf makecache
+sudo dnf install grafana
+```
+
+그라파나 설정 편집 (1)
+```bash
+sudo vi /etc/grafana/grafana.ini
+```
+
+그라파나 설정 편집 (2)
+```bash
+[server]
+
+domain = 127.0.0.1
+root_url = https://127.0.0.1/arm/
+serve_from_sub_path = true
+```
+
+
+Grafana 설치 후 서비스를 실행합니다.
+
+```bash
+sudo systemctl enable --now grafana-server
+```
+
+상태 확인:
+
+```bash
+sudo systemctl status grafana-server
+```
+
+접속:
+
+```text
+http://127.0.0.1:8080/arm
+
+id: admin
+pw: admin
+```
