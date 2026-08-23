@@ -56,3 +56,10 @@ sudo setsebool -P httpd_can_network_connect 1
 getsebool httpd_can_network_connect
 # httpd_can_network_connect --> on 이면 nginx 재기동
 ```
+
+## 포트 방화벽 허용
+
+```bash
+sudo firewall-cmd --add-port=9100/tcp
+# 방화벽 개방 (node_exporter)
+```
