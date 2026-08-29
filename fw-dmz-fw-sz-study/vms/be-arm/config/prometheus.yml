@@ -1,0 +1,60 @@
+# my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9091"]
+       # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
+        labels:
+          app: "prometheus"
+  - job_name: 'node'
+    # vm 용도별로 변수 수정 필요
+    static_configs:
+      - targets:
+          - '10.10.30.11:9100'
+        labels:
+          server: 'be-arm'
+          env: 'prod'
+      - targets:
+          - '10.10.20.231:9100'
+        labels:
+          server: 'ext-dmz1'
+          env: 'prod'
+      - targets:
+          - '10.10.20.251:9100'
+        labels:
+          server: 'ext-dmz-bastion-host'
+          env: 'prod'
+      - targets:
+          - '10.10.20.200:9100'
+        labels:
+          server: 'ext-dmz-lb'
+          env: 'prod'
+      - targets:
+          - '10.10.20.201:9100'
+        labels:
+          server: 'ext-dmz-lb1'
+          env: 'prod'
