@@ -225,3 +225,94 @@ http://127.0.0.1:8080/arm
 id: admin
 pw: admin
 ```
+
+Node exporter 설치 (다른망에 있는 vm 연결이 필요한 경우, 방화벽에서 연결설정 필요함)
+
+```bash
+cd /tmp
+
+wget https://github.com/prometheus/node_exporter/releases/download/v1.12.1/node_exporter-1.12.1.linux-arm64.tar.gz
+tar -xzf node_exporter-1.12.1.linux-arm64.tar.gz
+sudo cp node_exporter-1.12.1.linux-arm64/node_exporter /usr/local/bin/
+sudo chmod +x /usr/local/bin/node_exporter
+```
+
+계정 생성
+
+```bash
+sudo useradd --system \
+--no-create-home \
+--shell /sbin/nologin \
+node_exporter
+```
+
+서비스
+
+```bash
+sudo vi /etc/systemd/system/node_exporter.service
+
+[Unit]
+Description=Prometheus Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+실행
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now node_exporter
+
+systemctl status node_exporter
+
+curl http://localhost:9100/metrics
+```
+
+
+Prometheus 에 등록
+
+```bash
+sudo vi /etc/prometheus/prometheus.yml
+#  아래 형태로 등록
+# - job_name: 'node'
+#   static_configs:
+#     - targets:
+#          - '10.10.30.2:9100'
+#
+          
+scrape_configs:
+  - job_name: 'node'
+    # vm 용도별로 변수 수정 필요
+    static_configs:
+      - targets:
+          - '10.10.30.2:9100'
+        labels:
+          server: 'be-arm' 
+          env: 'prod'
+
+# prometheus 재기동
+promtool check config /etc/prometheus/prometheus.yml
+sudo systemctl restart prometheus
+```
+
+Grafana 웹 화면에서 프로메테우스 등록
+1. Grafana → Connections → Data sources
+2. 프로메테우스 선택
+3. http://localhost:9090
+4. save & test
+
+Grafana 웹 화면에서 대시보드에 node_exporter metric 등록
+1. Grafana → Dashboards 선택
+2. 우측 new 버튼 -> import dashboard 선택
+3. 원하는 정보 템플릿의 url 또는 grafana dashboard id 입력후 load
+4. Grafana → Dashboards 선택후, 등록한 목록 선택
