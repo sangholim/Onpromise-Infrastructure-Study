@@ -21,5 +21,65 @@ sudo hostnamectl set-hostname ext-dmz-bastion
 - [ssh 설정가이드](./ssh/README.md)
 
 
-  
+## 포트 방화벽 허용
+
+```bash
+sudo firewall-cmd --permanent --add-port=9100/tcp
+sudo firewall-cmd --reload
+# 방화벽 개방 (node_exporter)
+```
+
+## Node exporter 설치
+Node exporter 설치 (다른망에 있는 vm 연결이 필요한 경우, 방화벽에서 연결설정 필요함)
+
+```bash
+cd /tmp
+
+wget https://github.com/prometheus/node_exporter/releases/download/v1.12.1/node_exporter-1.12.1.linux-arm64.tar.gz
+tar -xzf node_exporter-1.12.1.linux-arm64.tar.gz
+sudo cp node_exporter-1.12.1.linux-arm64/node_exporter /usr/local/bin/
+sudo chmod +x /usr/local/bin/node_exporter
+```
+
+계정 생성
+
+```bash
+sudo useradd --system \
+--no-create-home \
+--shell /sbin/nologin \
+node_exporter
+```
+
+서비스
+
+```bash
+sudo vi /etc/systemd/system/node_exporter.service
+
+[Unit]
+Description=Prometheus Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+실행
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now node_exporter
+
+systemctl status node_exporter
+
+curl http://localhost:9100/metrics
+```
+
 
