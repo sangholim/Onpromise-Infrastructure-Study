@@ -6,3 +6,7 @@ route:
 
 receivers:
   - name: default-receiver
+    slack_configs:
+      - api_url: # slack webhook url 입력필요
+        channel: '#monitoring'
+        send_resolved: true
