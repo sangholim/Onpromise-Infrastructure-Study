@@ -18,7 +18,7 @@ sudo hostnamectl set-hostname ext-dmz-bastion
 ```
 
 ## ssh 설정 참고
-- [ssh 설정가이드](./ssh/README.md)
+- [ssh 설정가이드](ssh/README.md)
 
 
 ## 포트 방화벽 허용

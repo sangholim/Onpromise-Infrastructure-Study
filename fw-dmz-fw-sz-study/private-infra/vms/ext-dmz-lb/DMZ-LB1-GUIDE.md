@@ -45,7 +45,7 @@ sudo hostnamectl set-hostname ext-dmz-lb1
 -------
 
 ## ssh 설정 참고
-- [ssh 설정가이드](./ssh/README.md)
+- [ssh 설정가이드](ssh/README.md)
 
 ## 목표
 - fw 에서 proxy 로 오는 ip 를 받는 역할, proxy vm 들의 lb 를 담당
